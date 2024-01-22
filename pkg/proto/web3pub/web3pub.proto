@@ -1,0 +1,166 @@
+syntax = "proto3";
+option go_package = "Open_IM/pkg/proto/web3pub;web3pub";
+package web3pub;
+
+message CommonResp{
+  int32   errCode = 1;
+  string  errMsg = 2;
+}
+
+message ThirdPlatformTwitterReq {
+  string username = 1;
+  string userid = 2;
+  string nonce = 3;
+  string OperatorID=5;
+}
+message  ThirdPlatformTwitterRsp {
+  CommonResp CommonResp = 1;
+}
+
+message GetUserAuthorizedThirdPlatformListReq {
+   string userid = 1;
+}
+
+message PlatFormRsp {
+  string platForm = 1;
+  string userId = 2;
+}
+
+message  GetUserAuthorizedThirdPlatformListRsp {
+  CommonResp CommonResp = 1;
+
+  repeated PlatFormRsp platFormList = 2;
+}
+message CheckUserIsFollowSystemTwitterReq {
+    string OperatorID=1;
+    string userId=2; //查询自己是否绑定了官方的twitter
+}
+message CheckUserIsFollowSystemTwitterRsp {
+  CommonResp CommonResp = 1;
+}
+message GetRewordTaskReq {
+  string OperatorID=1;
+  string OpUserID = 2;
+  string  TaskID=3;
+  string GroupId=4;
+}
+message GetRewordTaskRsp {
+  CommonResp CommonResp = 1;
+}
+message  UserTaskListReq {
+  string OperatorID=1;
+  string userId =2;
+
+}
+message Task {
+  string  taskId =1;
+  string  taskName =2;
+  string  taskTarget = 3;
+  string  taskCurrent= 4;
+  string  taskStatus = 5;
+  string  taskScore = 6;
+}
+
+message UserTaskListResp {
+  CommonResp CommonResp = 1;
+    repeated Task task =2;
+}
+message UserFinishTaskReq {
+  string OperatorID=1;
+  string userId =2;
+  string taskID = 3; // 检查该项任务是否完成
+}
+
+message UserFinishTaskResp {
+  CommonResp CommonResp = 1;
+  Task task =2;
+}
+message EthRpcTxIDReq {
+  string OperatorID=1;
+  string txID=2;
+  string chainID=3; //某条链条上
+}
+message EthRpcTxIDResp {
+  CommonResp CommonResp = 1;
+  string TransactionHash = 2;
+  string FromAddress = 3;
+  string ToAddress = 4;
+  double Value = 5;
+  int32 Status = 6;
+  string ContractAddress = 7;
+  uint32 Decimals = 8;
+}
+
+message UserGameReq {
+  string OperatorID=1;
+  string userID =2;
+  string gameID =3; // 检查该项任务是否完成
+  int32  status =4; //游戏状态
+  string ip=5;
+  string userAgent=6;
+  int64 startTime=7;
+  int64 endTime=8;
+  double score=9;
+}
+message CheckIsHaveNftRecvIDReq{
+  string OperatorID=1;
+  string userId = 2;
+}
+message CheckIsHaveNftRecvIDResp{
+  CommonResp CommonResp = 1;
+  bool HaveNft = 2;
+}
+
+message CheckIsHaveGuanFangNftRecvIDReq{
+  string OperatorID=1;
+  string userId = 2;
+}
+message CheckIsHaveGuanFangNftRecvIDResp{
+  CommonResp CommonResp = 1;
+  bool HaveNft = 2;
+}
+
+message UserGameResp {
+  CommonResp CommonResp = 1;
+  int64 startTime=2;
+}
+message UserGameRankListReq {
+  string OperatorID=1;
+  string userID =2;
+  int32 gameID=3;
+}
+message UserGameScore {
+  int32  RankIndex=1;
+  string UserID = 2;
+  string nickname =3;
+  string faceURL =4;
+  string tokenContractChain=5;
+  double score =6;
+  int64 reward =7;
+}
+message UserGameRankListResp {
+  CommonResp CommonResp = 1;
+  repeated  UserGameScore UserRankInfo =2; // 总分排名
+  UserGameScore   UserSelfRankInfo=3; //自己的排名
+}
+message CheckDomainHadParseTxtReq{
+  string OperatorID=1;
+  string userId = 2;
+  string dnsDomain=3;
+}
+message CheckDomainHadParseTxtResp{
+  CommonResp CommonResp = 1;
+}
+service web3pub{
+  rpc GetTwitterTimeLine(ThirdPlatformTwitterReq)returns (ThirdPlatformTwitterRsp);
+  rpc GetUserAuthorizedThirdPlatformList(GetUserAuthorizedThirdPlatformListReq)returns (GetUserAuthorizedThirdPlatformListRsp);
+  //检查自己是否关注了官方的推特
+  rpc CheckIsFollowSystemTwitter(CheckUserIsFollowSystemTwitterReq)returns(CheckUserIsFollowSystemTwitterRsp);
+  rpc PostGamingStatus(UserGameReq)returns (UserGameResp);
+  rpc GetGamingRankStatus(UserGameRankListReq)returns (UserGameRankListResp);
+  rpc GetEthTxIDTaskRpc(EthRpcTxIDReq)returns(EthRpcTxIDResp);
+  rpc CheckIsHaveNftRecvID(CheckIsHaveNftRecvIDReq)returns(CheckIsHaveNftRecvIDResp);
+  rpc CheckIsHaveGuanFangNftRecvID(CheckIsHaveGuanFangNftRecvIDReq)returns(CheckIsHaveGuanFangNftRecvIDResp);
+  rpc CheckDnsDomainHadParseBiuBiuTxt(CheckDomainHadParseTxtReq)returns(CheckDomainHadParseTxtResp);
+
+}

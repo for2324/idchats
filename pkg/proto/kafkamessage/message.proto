@@ -1,0 +1,23 @@
+syntax = "proto3";
+option go_package = "./kafkaMessage";
+package kafkaMessage;
+message kafkaMsg{
+  int32 MessageType=1 ;
+  EmailMessage emailMsg=2;
+  SmsMessage  smsMsg=3;
+}
+
+message SmsMessage {
+  int32 smsType=1;
+  string area=2;
+  string phoneNumber=3;
+  string code =4;
+}
+
+message EmailMessage {
+  int32 emailType=1;
+  string toAddress=2; //邮箱地址
+  string subject=3; //邮箱主题
+  string title=4; //标题
+  string body=5; //邮件内容
+}

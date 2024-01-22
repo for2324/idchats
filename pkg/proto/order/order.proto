@@ -1,0 +1,115 @@
+syntax = "proto3";
+option go_package = "Open_IM/pkg/proto/order;pbOrder";
+package order;
+
+
+service orderService{
+    rpc CreatePayScanBlockTask(CreatePayScanBlockTaskReq)returns(CreatePayScanBlockTaskResp);
+    rpc GetPayScanBlockTaskByOrderId(GetPayScanBlockTaskByOrderIdReq)returns(GetPayScanBlockTaskByOrderIdResp);
+    rpc GetPayScanBlockTaskById(GetPayScanBlockTaskByIdReq)returns(GetPayScanBlockTaskByIdResp);
+    rpc ReplenishmentOrder(ReplenishmentOrderReq)returns(ReplenishmentOrderResp);
+    rpc ForcedReplenishmentOrder(ForcedReplenishmentOrderReq)returns(ForcedReplenishmentOrderResp);
+}
+
+message ForcedReplenishmentOrderReq {
+    string OperationID = 1;
+    uint64 Id = 2;
+    string Remark = 3;
+}
+message ForcedReplenishmentOrderResp {
+    CommonResp CommonResp = 1;
+}
+
+message ReplenishmentOrderReq {
+    string OperationID = 1;
+    uint64 Id = 2;
+    string Remark = 3;
+    string TxnHash = 4;
+}
+
+message ReplenishmentOrderResp {
+    CommonResp CommonResp = 1;
+}
+
+message GetPayScanBlockTaskByOrderIdReq {
+    string OperationID = 1;
+    string OrderId = 2;
+}
+message GetPayScanBlockTaskByOrderIdResp {
+    CommonResp CommonResp = 1;
+    ScanTaskInfo ScanTaskInfo = 2;
+}
+message GetPayScanBlockTaskByIdReq {
+    string OperationID = 1;
+    uint64 Id = 2;
+}
+message GetPayScanBlockTaskByIdResp {
+    CommonResp CommonResp = 1;
+    ScanTaskInfo ScanTaskInfo = 2;
+}
+
+message CreatePayScanBlockTaskReq {
+    string OperationID = 1;
+    uint64 USD = 2;
+    string OrderId = 3;
+    string FormAddress = 4;
+    string TxnType = 5;
+    string NotifyUrl = 6;
+    string Mark = 7;
+    string NotifyEncryptType = 8;
+    string NotifyEncryptKey = 9;
+    string Attach = 10;
+}
+
+message ScanTaskInfo {
+    uint64 Id = 1;
+    string FormAddress = 2;
+    string ToAddress = 3;
+    string TxnType = 4;
+    string Value = 5;
+    uint32 Decimal = 6;
+    uint64 StartBlockNumber = 7;
+    uint64 ScanBlockNumber = 8;
+    uint64 Rate = 9;
+    uint64 GasFee = 10;
+    string Type = 11;
+    int32 Status = 12;
+    string Tag = 13;
+    int64 ChainId = 14;
+    string TxnHash = 15;
+    string CreateTime = 16;
+    string BlockStartTime = 17;
+    string BlockExpireTime = 18;
+    string OrderId = 19;
+    string Mark = 20;
+    string Ex = 21;
+    uint64 USDPrice = 22;
+    string NotifyUrl = 23;
+}
+message MsgDataToOrderByMQ {
+    string OperationID = 1;
+    uint64 USD = 2;
+    string OrderId = 3;
+    string UserId = 4;
+    string TxnType = 5;
+    string Mark = 6;
+    string Value = 7;
+    uint32 Decimal = 8;
+    string TxnHash = 9;
+    string NotifyUrl = 10;
+    string PayTime = 11;
+    string ID = 12;
+    string NotifyEncryptType = 13;
+    string NotifyEncryptKey = 14;
+    string Attach = 15;
+    string CreateTime = 16;
+}
+message CreatePayScanBlockTaskResp {
+    CommonResp CommonResp = 1;
+    ScanTaskInfo ScanTaskInfo = 2;
+}
+
+message CommonResp{
+    int32   errCode = 1;
+    string  errMsg = 2;
+}

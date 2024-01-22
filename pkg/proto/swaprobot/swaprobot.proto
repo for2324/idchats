@@ -1,0 +1,91 @@
+syntax = "proto3";
+option go_package = "Open_IM/pkg/proto/swaprobot;swaprobot";
+package swaprobot;
+message SwapRecordInfoReq{
+  string operationID =1;
+  string method= 2;
+  string userID = 3;
+  string address =4;
+  string fromSymbol=5;
+  string amount=6;
+  string toSymbol =7;
+  string tp  = 8;
+  string sl = 9;
+  string OrdID=10;
+  string minimumOut=11;
+  string deadlineDay=12;
+  string ordStatus =13;
+  string searchBy =14;
+ }
+message CommonResp {
+  int32   errCode = 1;
+  string  errMsg = 2;
+}
+
+message SwapRobotOrderStatusReq {
+  string operatorID =1;
+  string OrderID = 2;
+}
+message SwapRecordInfoResp {
+  CommonResp CommonResp=1;
+  string OrderID = 2;
+  repeated  TaskListResponse taskList=3;
+}
+message SwapRobotOrderStatusResp {
+  CommonResp CommonResp=1;
+}
+
+
+
+message TaskListResponse {
+  string address = 1;
+  string taskStartTimestamp = 3;
+  string method = 4;
+  string ordId = 5;
+  string ordStatus = 6;
+  TaskParams params = 7;
+}
+
+message TaskParams {
+  double amount = 1;
+  int32 deadlineDay = 2;
+  string fromSymbol = 3;
+  double minimumOut = 4;
+  double sl = 5;
+  string toSymbol = 6;
+  double tp = 7;
+}
+
+
+service swaprobot {
+  // 第三方通讯信息
+  rpc BotOperation(BotOperationReq)returns(BotOperationResp);
+  rpc FinishTaskToGetReword(BotSwapTradeReq) returns(BotSwapTradeResp);
+}
+
+message BotOperationReq {
+  string operatorID =1;
+  string Method = 2;
+  string UserID = 3;
+  bytes Params = 4;
+  string BiBotKey = 5;
+
+}
+
+message BotOperationResp {
+  CommonResp CommonResp=1;
+  bytes Data = 2;
+}
+message BotSwapTradeReq {
+  string taskID =1;  //某条任务
+  string userID =2; // 某个用户
+  string tradeVolumeUsd = 3; //该任务产生多少交易额（usdt）
+  string tradeNo= 4; //bibot产生的交易号 。
+  string finishTime=5; //交易完成的时间戳s
+  string tradeType = 6; //交易类型
+  string feeUsdCost= 7; //交易产生的手续费U
+  string apiKey = 8; //是哪个apikey产生的。
+}
+message BotSwapTradeResp  {
+  CommonResp CommonResp=1;
+}

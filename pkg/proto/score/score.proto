@@ -1,0 +1,99 @@
+syntax = "proto3";
+option go_package = "/score;pbScore";
+package score;
+
+message CommonResp{
+    int32   errCode = 1;
+    string  errMsg = 2;
+}
+
+message UserScoreInfo {
+    string UserId = 1;
+    uint64 Score = 2;
+}
+message UserRewardEventLog {
+    string Id = 1;
+    string UserId = 2;
+    string RewardType = 3;
+    int64 Reward = 4;
+    string Info = 5;
+    int64  CreateTime = 6;
+}
+message UploadUserRewardEventReq{
+    string OperationID =1;
+    string Id = 2;
+    string UserId = 3;
+    string RewardType = 4;
+    int64 Reward = 5;
+    string Info = 6;
+}
+
+message UploadUserRewardEventResp{
+    CommonResp CommonResp = 1;
+}
+
+message GetUserScoreInfoReq {
+    string OperationID =1;
+    string UserId = 2;
+}
+message GetUserScoreInfoResp {
+    CommonResp CommonResp = 1;
+    UserScoreInfo userScoreInfo = 2;
+}
+message GetRewardEventLogsReq {
+    string OperationID =1;
+    string UserId = 2;
+    string RewardType = 3;
+    int32  PageIndex =5;
+    int32  PageSize=6;
+}
+message GetRewardEventLogsResp {
+    CommonResp CommonResp = 1;
+    repeated UserRewardEventLog EventLogs = 2;
+}
+
+message WithdrawScoreReq {
+    string OperationID =1;
+    string UserId = 2;
+    int64  Score = 3;
+    string Coin = 4;
+}
+
+message WithdrawScoreResp {
+    CommonResp CommonResp = 1;
+    int64 WithdrawId = 2;
+    string TxHash = 3;
+}
+message WithdrawScoreLog {
+    int64 Id = 1;
+    string UserId = 2;
+    int64  Score = 3;
+    string Amount = 4;
+    string Status = 5;
+    string Remark = 6;
+    string Coin = 7;
+    int64 ChainId = 8;
+    string TxHash = 9;
+    string ChainUpLogId = 10;
+    int64  CreateTime = 11;
+    int32 Decimal = 12;
+}
+message GetWithdrawScoreLogsReq {
+    string OperationID =1;
+    string UserId = 2;
+    int32  PageIndex =5;
+    int32  PageSize=6;
+}
+message GetWithdrawScoreLogsResp {
+    CommonResp CommonResp = 1;
+    repeated WithdrawScoreLog EventLogs = 2;
+}
+
+service scoreService{
+    rpc UploadUserRewardEvent(UploadUserRewardEventReq) returns (UploadUserRewardEventResp);
+    rpc GetUserScoreInfo(GetUserScoreInfoReq) returns (GetUserScoreInfoResp);
+    rpc GetRewardEventLogs(GetRewardEventLogsReq) returns (GetRewardEventLogsResp);
+
+    rpc WithdrawScore(WithdrawScoreReq) returns (WithdrawScoreResp);
+    rpc GetWithdrawScoreLogs(GetWithdrawScoreLogsReq) returns (GetWithdrawScoreLogsResp);
+}

@@ -1,0 +1,14 @@
+groups:
+  - name: alert-node
+    rules:
+    - alert: NodeDown
+      # 注意：这里的job_name一定要跟prometheus配置文件中配置的相匹配
+      expr: up{job="openIM-server"} == 0
+      for: 1m
+      labels:
+        severity: critical
+        instance: "{{ $labels.instance }}"
+      annotations:
+        summary: "instance: {{ $labels.group }} {{ $labels.instance }} is down"
+        description: "Instance: {{ $labels.instance }} 已经宕机 1分钟"
+        value: "{{ $value }}"

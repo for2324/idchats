@@ -1,0 +1,464 @@
+syntax = "proto3";
+import "pkg/proto/sdk_ws/ws.proto";
+import "pkg/proto/sdk_ws/wrappers.proto";
+import "pkg/proto/conversation/conversation.proto";
+import  "google/protobuf/empty.proto";
+option go_package = "Open_IM/pkg/proto/user;user";
+package user;
+
+message CommonResp{
+  int32  errCode = 1;
+  string errMsg = 2;
+}
+
+message GetAllUserIDReq{
+  string opUserID = 1;
+  string operationID = 2;
+}
+message GetAllUserIDResp{
+  CommonResp  CommonResp = 1;
+  repeated string UserIDList = 2;
+}
+
+
+message AccountCheckReq{
+  repeated string CheckUserIDList = 1;
+  string OpUserID = 2;
+  string OperationID = 3;
+
+}
+message AccountCheckResp{
+  CommonResp  commonResp = 1;
+  message SingleUserStatus {
+    string userID = 1;
+    string accountStatus = 2;
+  }
+  repeated SingleUserStatus ResultList = 2;
+}
+
+
+message GetUserInfoReq{
+  repeated string userIDList = 1;
+  string OpUserID = 2;
+  string OperationID = 3;
+}
+message GetUserInfoResp{
+  CommonResp  commonResp = 1;
+  repeated server_api_params.UserInfo UserInfoList = 2;
+}
+message GetSelfUserInfoReq{
+  string userID = 1;
+  string OperationID = 3;
+}
+message GetSelfUserInfoResp{
+  CommonResp  commonResp = 1;
+  server_api_params.UserInfo UserInfo = 2;
+}
+message GetUserInfoWithProfileResp{
+  CommonResp  commonResp = 1;
+  server_api_params.UserInfo UserInfoList = 2;
+  string userProfile  =3;
+  string twitter = 4;
+  string dnsDomain=5;
+  string EmailAddress=6;
+  string userIntroduction=7;
+  int32  dnsDomainVerify=8;
+  repeated server_api_params.LinkTreeMsgReq linkTree=9;
+}
+
+
+message UpdateUserInfoReq{
+  server_api_params.UserInfo UserInfo = 1;
+  string OpUserID = 2;
+  string  operationID = 3;
+}
+message UpdateUserInfoResp{
+  CommonResp  commonResp = 1;
+}
+
+message UpdateUserInfoHeadReq{
+  server_api_params.UserInfo UserInfo = 1;
+  string OpUserID = 2;
+  string  operationID = 3;
+  string  ContractChain =4;
+}
+message UpdateUserInfoHeadResp{
+  CommonResp  commonResp = 1;
+}
+message SetGlobalRecvMessageOptReq{
+  string userID = 1;
+  string  operationID = 2;
+  int32 globalRecvMsgOpt = 3;
+  string fieldName=4;
+}
+message SetGlobalRecvMessageOptResp{
+  CommonResp  commonResp = 1;
+}
+
+message SetConversationReq{
+  conversation.Conversation Conversation = 1;
+  int32 notificationType = 2;
+  string OperationID = 3;
+}
+
+message SetConversationResp{
+  CommonResp  commonResp = 1;
+}
+
+message SetRecvMsgOptReq {
+  string OwnerUserID = 1;
+  string ConversationID = 2;
+  int32 RecvMsgOpt = 3;
+  int32 notificationType = 4;
+  string OperationID = 5;
+}
+
+message SetRecvMsgOptResp {
+  CommonResp  commonResp = 1;
+}
+
+message GetConversationReq{
+  string ConversationID = 1;
+  string OwnerUserID = 2;
+  string OperationID = 3;
+}
+
+message GetConversationResp{
+  CommonResp  commonResp = 1;
+  conversation.Conversation Conversation = 2;
+}
+
+message GetConversationsReq{
+  string OwnerUserID = 1;
+  repeated string ConversationIDs = 2;
+  string OperationID = 3;
+}
+
+message GetConversationsResp{
+  CommonResp  commonResp = 1;
+  repeated conversation.Conversation Conversations = 2;
+}
+
+message GetAllConversationsReq{
+  string OwnerUserID = 1;
+  string OperationID = 2;
+}
+
+message GetAllConversationsResp{
+  CommonResp  commonResp = 1;
+  repeated conversation.Conversation Conversations = 2;
+}
+
+message BatchSetConversationsReq{
+  repeated conversation.Conversation Conversations = 1;
+  string OwnerUserID = 2;
+  int32 notificationType = 3;
+  string OperationID = 4;
+}
+
+message BatchSetConversationsResp{
+  CommonResp  commonResp = 1;
+  repeated string Success = 2;
+  repeated string Failed = 3;
+}
+
+
+message GetUsersReq {
+  string operationID = 1;
+  server_api_params.RequestPagination pagination = 2;
+  string userName = 3;
+  string userID = 4;
+  string content = 5;
+}
+
+message CmsUser {
+  server_api_params.UserInfo user = 1;
+  bool isBlock = 2;
+}
+
+message GetUsersResp{
+  CommonResp  commonResp = 1;
+  repeated CmsUser userList = 2;
+  server_api_params.ResponsePagination Pagination = 3;
+  int32 totalNums = 4;
+}
+
+message AddUserReq{
+  server_api_params.UserInfo userInfo = 1;
+  string operationID = 2;
+}
+
+message AddUserResp{
+  CommonResp  CommonResp = 1;
+}
+
+
+message BlockUserReq{
+  string userID = 1;
+  string endDisableTime = 2;
+  string operationID = 3;
+  string opUserID = 4;
+}
+
+message BlockUserResp{
+  CommonResp  CommonResp = 1;
+}
+
+message UnBlockUserReq{
+  string userID = 1;
+  string operationID = 2;
+  string opUserID = 3;
+}
+
+message UnBlockUserResp{
+  CommonResp  CommonResp = 1;
+}
+
+message GetBlockUsersReq{
+  server_api_params.RequestPagination pagination = 1;
+  string operationID = 2;
+  string userID = 3;
+  int32 totalBlockUserNum = 4;
+}
+
+message BlockUser {
+  server_api_params.UserInfo UserInfo = 1;
+  string BeginDisableTime = 2;
+  string EndDisableTime = 3;
+}
+
+message GetBlockUsersResp{
+  CommonResp  CommonResp = 1;
+  repeated BlockUser BlockUsers = 2;
+  server_api_params.ResponsePagination Pagination = 3;
+  int32 UserNums = 4;
+}
+
+message BindUserEnsDomainReq{
+  string opUserID = 1;
+  string operationID = 2;
+  string EnsDomain = 3;
+  string ChainID=4;
+}
+message BindUserThirdInfoReq{
+  string opUserID = 1;
+  string operationID = 2;
+  int32  Action =3;
+  string Domain = 4;
+  string EmailAddress =5;
+}
+message BindUserThirdInfoResp{
+  CommonResp  CommonResp = 1;
+}
+//查询用户第三方绑定的信息
+message GetUserThirdInfoReq {
+  string opUserID = 1;
+  string operationID = 2;
+  repeated  string userList = 3;
+  string chainID =4;
+}
+
+message GetUserThirdInfoResp {
+  CommonResp  CommonResp = 1;
+  repeated  server_api_params.UserThirdInfo UserThirdInfoList = 2;
+}
+
+message BindUserTelephoneReq {
+    string OpUserID =1;
+    string operationID = 2;
+    string Telephone=3;
+    string Email =4;
+    bool  isUpdatePhone=5;
+
+}
+message  BindUserTelephoneResp {
+  CommonResp  CommonResp = 1;
+
+}
+message  DelThirdPlatformReq  {
+  string OpUserID =1;
+  string operationID = 2;
+  string PlatformName=3;
+  string chainID = 4;
+}
+
+message  DelThirdPlatformResp  {
+  CommonResp  CommonResp = 1;
+}
+message  ShowThirdPlatformReq  {
+  string OpUserID =1;
+  string operationID = 2;
+  string PlatformName=3;
+  bool ShowFlag= 4;
+  string chainID = 5;
+}
+
+message  ShowThirdPlatformResp  {
+  CommonResp  CommonResp = 1;
+}
+message OperatorUserChatTokenReq {
+  string OpUserID =1;
+  string operationID = 2;
+  string operator =3;
+  int64  value=4;
+  string txID = 5;
+  string chainID= 6;
+  string paramStr= 7;
+  string txType =8; //交易类型
+}
+message OperatorUserChatTokenResp {
+  CommonResp  CommonResp = 1;
+  uint64 NowChatToken  =2;
+  uint64 NowChatCount =3;
+}
+message TransferChatTokenOperatorReq {
+  string  OpUserID = 1; //from
+  string operationID=2; //操作链路
+  string ToGroupID=3; //转给谁
+  int64  chatTokenCount=4; //转入金额
+}
+message TransferChatTokenOperatorResp {
+  CommonResp  CommonResp = 1;
+  int64 GroupChatTokenCount= 2;
+  uint64 NowChatToken  =3; //用户剩余
+}
+message NftInfo {
+  int32   nftChainID =1;
+  string  nftContract=2;
+  string  tokenID=3;
+  string  nftContractType=4;
+  string  nftTokenURL=5;
+  int64   likesCount =6;
+  int32   isLikes=7;
+  int64   ID =8;
+}
+
+message RPCBindShowNftReq {
+  repeated NftInfo nftInfo=1;
+  string userID=2;
+  string operationID =3;
+  string opUserID =4;
+}
+message RPCBindShowNftResp {
+  CommonResp  CommonResp = 1;
+}
+message GetRPCBindShowNftResp {
+  CommonResp  CommonResp = 1;
+  repeated NftInfo nftInfo=2;
+}
+message RpcLikeShowNftStatusReq {
+  string ArticleID =1;
+  string operationID = 2;
+  string userID = 3; //查询的人判断这个人是否点赞
+}
+message RpcLikeShowNftStatusResp  {
+    int64 nftLikeCount =1;
+    int32 nftIsLike =2;
+}
+message GetShowUserSettingReq {
+  string userID = 1;
+  string operationID=2;
+  string opUserID =3;//操作的人
+}
+message GetShowUserSettingResp {
+  CommonResp  CommonResp = 1;
+  string userID=2;
+  string   nickname = 3;
+  string faceURL = 4;
+  int32 showBalance= 5;
+  int32 openAnnouncement=6;
+  string userProfile =7;
+  string userIntroduction =8;
+  NftInfo  userHeadTokenInfo =9;
+  repeated NftInfo showNftList=10;
+  string emailAddress  =11;
+  string userTwitter = 12;
+  string dnsDomain =13;
+  bool isShowTwitter=14;
+  bool showUserEmail= 15;
+  int32 dnsDomainVerify=16;
+  repeated  server_api_params.LinkTreeMsgReq  linkTree=17;
+  int64 followsCount =18;
+  int64 followingCount=19;
+}
+message UpdateUserSettingReq  {
+  string operationID =1;
+  string userID=2;
+  google.protobuf.StringValue  nickname = 3;
+  google.protobuf.StringValue faceURL = 4;
+  google.protobuf.Int32Value showBalance= 5;
+  google.protobuf.Int32Value openAnnouncement=6;
+  google.protobuf.StringValue userProfile =7;
+  google.protobuf.StringValue userIntroduction =8;
+  NftInfo userHeadTokenInfo =9;
+  repeated NftInfo showNftList=10;
+  //google.protobuf.StringValue EmailAddress  =11;
+  //google.protobuf.StringValue UserTwitter = 12;
+  google.protobuf.StringValue DnsDomain =13;
+  google.protobuf.Int32Value IsShowTwitter=14;
+  google.protobuf.Int32Value IsShowUserEmail=15;
+  google.protobuf.Int32Value showNftListCount =16;
+  repeated server_api_params.LinkTreeMsgReq  linkTree =17;
+  google.protobuf.Int32Value linkTreeCount=18;
+}
+message UpdateUserSettingResp  {
+  CommonResp  CommonResp = 1;
+}
+message EmailContentReq {
+  string UserID=1;
+  string EmailContent=2;
+}
+message EmailContentResp {
+  CommonResp  CommonResp = 1;
+}
+
+service user {
+  rpc GetUserInfo(GetUserInfoReq) returns(GetUserInfoResp);
+  rpc GetSelfUserInfo(GetSelfUserInfoReq) returns(GetSelfUserInfoResp);
+  rpc GetUserInfoWithoutToken(GetUserInfoReq) returns(GetUserInfoWithProfileResp);
+  rpc UpdateUserInfo(UpdateUserInfoReq) returns(UpdateUserInfoResp);
+  rpc UpdateUserInfoHead(UpdateUserInfoHeadReq) returns(UpdateUserInfoHeadResp);
+  rpc RpcUpdateUserFieldData(SetGlobalRecvMessageOptReq) returns(SetGlobalRecvMessageOptResp);
+  rpc GetAllUserID(GetAllUserIDReq)returns(GetAllUserIDResp);
+  rpc AccountCheck(AccountCheckReq)returns(AccountCheckResp);
+  rpc GetConversation(GetConversationReq)returns(GetConversationResp);
+  rpc GetAllConversations(GetAllConversationsReq)returns(GetAllConversationsResp);
+  rpc GetConversations(GetConversationsReq)returns(GetConversationsResp);
+  rpc BatchSetConversations(BatchSetConversationsReq)returns(BatchSetConversationsResp);
+  rpc SetConversation(SetConversationReq)returns(SetConversationResp);
+  rpc MonitorConversation(SetConversationReq)returns(SetConversationResp);
+  rpc SetRecvMsgOpt(SetRecvMsgOptReq)returns(SetRecvMsgOptResp);
+  rpc GetUsers(GetUsersReq) returns (GetUsersResp);
+  rpc AddUser(AddUserReq) returns (AddUserResp);
+  rpc BlockUser(BlockUserReq) returns (BlockUserResp);
+  rpc UnBlockUser(UnBlockUserReq) returns (UnBlockUserResp);
+  rpc GetBlockUsers(GetBlockUsersReq) returns (GetBlockUsersResp);
+
+  //  获取个人信息
+  rpc GetUserThird(GetUserThirdInfoReq)returns(GetUserThirdInfoResp);
+  //申请ens域名的绑定
+  rpc BindUserEnsDomain(BindUserEnsDomainReq)returns (BindUserThirdInfoResp);
+  //蓝v认证的域名
+  rpc BindUserThirdInfo(BindUserThirdInfoReq)returns (BindUserThirdInfoResp);
+  //修改用户的手机号码
+  rpc BindUserTelephoneRPC(BindUserTelephoneReq)returns (BindUserTelephoneResp) ;
+  //RPC删除第三方平台绑定
+  rpc DeletePlatformInfo(DelThirdPlatformReq)returns(DelThirdPlatformResp);
+  rpc ShowPlatformInfo(ShowThirdPlatformReq)returns(ShowThirdPlatformResp);
+  // 操作用户的token值得 注意分布式锁
+  rpc OperatorUserChatToken(OperatorUserChatTokenReq) returns (OperatorUserChatTokenResp);
+  // 用户给group转账
+  rpc TransferChatTokenFromUserToGroup (TransferChatTokenOperatorReq)returns (TransferChatTokenOperatorResp);
+  //用户绑定nft的内容
+  rpc BindShowNft (RPCBindShowNftReq)returns (RPCBindShowNftResp);
+  rpc GetBindShowNft (RPCBindShowNftReq)returns (GetRPCBindShowNftResp);
+  rpc GetShowNftLikeStatus(RpcLikeShowNftStatusReq) returns(RpcLikeShowNftStatusResp);
+  //V2.1 用户设置界面
+  rpc RpcUserSettingInfo(GetShowUserSettingReq) returns (GetShowUserSettingResp);
+  rpc RpcUserSettingUpdate(UpdateUserSettingReq) returns (UpdateUserSettingResp);
+  //推送消息给所有的粉丝并进入数据到数据库同时在推送给用户
+  rpc RpcPushMessageToFollowsUser(server_api_params.PushMessageToMailFromUserToFans) returns (google.protobuf.Empty);
+  //推送消息到用户的邮箱
+  rpc RpcSendEmailToUserLinkEmail(EmailContentReq)returns(CommonResp);
+}
+

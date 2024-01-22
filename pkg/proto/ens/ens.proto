@@ -1,0 +1,85 @@
+syntax = "proto3";
+import "pkg/proto/order/order.proto";
+option go_package = "Open_IM/pkg/proto/ens;pbEns";
+package ens;
+
+service ensService{
+    // 创建注册ens订单
+    rpc CreateRegisterEnsOrder(CreateRegisterEnsOrderReq)returns(CreateRegisterEnsOrderResp);
+    // 获取ens订单信息
+    rpc GetEnsOrderInfo(GetEnsOrderInfoReq)returns(GetEnsOrderInfoResp);
+    // 确认ens订单已经支付
+    rpc ConfirmEnsOrderHasBeenPaid(ConfirmEnsOrderHasBeenPaidReq)returns(ConfirmEnsOrderHasBeenPaidResp);
+}
+
+message RollbackENSRegisterTxnReq {
+    string OperationID = 1;
+    string RegisterTxnHash = 2; 
+}
+message RollbackENSRegisterTxnResp {
+    CommonResp CommonResp = 1;
+}   
+
+message ConfirmEnsOrderHasBeenRegisteredReq {
+    string OperationID = 1;
+    string RegisterTxnHash = 2; 
+}
+message ConfirmEnsOrderHasBeenRegisteredResp {
+    CommonResp CommonResp = 1;
+}
+
+message ConfirmEnsOrderHasBeenPaidReq {
+    string OperationID = 1;
+    string OrderId = 2;
+    string TxnHash = 3;
+}
+
+message ConfirmEnsOrderHasBeenPaidResp {
+    CommonResp CommonResp = 1;
+}
+
+message GetEnsOrderInfoReq {
+    string OperationID = 1;
+    string UserId = 2;
+    uint64 OrderId = 3;
+}
+
+message EnsOrderInfo {
+    uint64 OrderId = 1;
+    string EnsName = 2;
+    string Status = 3;
+    string TxnType = 4;
+    uint64 USDPrice = 5;
+    uint64 USDGasFee = 6;
+    string EnsInviter = 7;
+    string TxnHash = 8;
+    string RegisterTxnHash = 9;
+    string CreateTime = 10;
+    string PayTime = 11;
+    string ExpireTime = 12;
+}
+
+message GetEnsOrderInfoResp {
+    CommonResp CommonResp = 1;
+    EnsOrderInfo EnsOrderInfo = 2;
+    order.ScanTaskInfo ScanTaskInfo = 3;
+}
+
+message CreateRegisterEnsOrderReq {
+    string OperationID = 1;
+    string UserId = 2;
+    string EnsName = 3;
+    string TxnType = 4; // ETH  BNB  ERC20_BIU ERC20_USDT
+    string EnsInviter = 5;
+}
+
+message CreateRegisterEnsOrderResp {
+    CommonResp CommonResp = 1;
+    EnsOrderInfo EnsOrderInfo = 2;
+    order.ScanTaskInfo ScanTaskInfo = 3;
+} 
+
+message CommonResp{
+    int32   errCode = 1;
+    string  errMsg = 2;
+}

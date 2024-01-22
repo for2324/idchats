@@ -1,0 +1,924 @@
+syntax = "proto3";
+import "pkg/proto/sdk_ws/ws.proto";
+import "pkg/proto/sdk_ws/wrappers.proto";
+import "pkg/proto/order/order.proto";
+import "pkg/proto/google/protobuf/timestamp.proto";
+option go_package = "Open_IM/pkg/proto/group;group";
+
+package group;
+
+message CommonResp{
+  int32   ErrCode = 1;
+  string  ErrMsg = 2;
+}
+
+message GroupAddMemberInfo{
+  string UserID = 1;
+  int32 RoleLevel = 2;
+}
+
+message CreateGroupReq{
+  repeated GroupAddMemberInfo InitMemberList = 1;
+  server_api_params.GroupInfo GroupInfo = 2;
+  string OperationID = 3;
+  string OpUserID = 4;  //app manager or group owner
+  string OwnerUserID = 5; //owner
+}
+
+
+message CreateGroupResp{
+  int32   ErrCode = 1;
+  string  ErrMsg = 2;
+  server_api_params.GroupInfo GroupInfo = 3;
+}
+
+message CreateCommunityReq{
+  server_api_params.GroupInfo GroupInfo = 1;
+  string OperationID = 2;
+  string OpUserID = 3;  //app manager or group owner
+  string OwnerUserID = 4; //owner
+}
+
+message CreateCommunityResp{
+  int32   ErrCode = 1;
+  string  ErrMsg = 2;
+  server_api_params.GroupInfo GroupInfo = 3;
+}
+
+message CommunityChannelReq{
+  string OperationID = 1;
+  string OpUserID = 2;  //app manager or group owner
+  string OwnerUserID = 3; //owner
+  string OpInfo = 4; //删除获取是添加
+  server_api_params.GroupChannelInfo ChannelInfo =5;
+}
+message CommunityChannelResp{
+  CommonResp CommonResp = 1;
+  string OpInfo =2 ;
+  server_api_params.GroupChannelInfo ChannelList = 3;
+}
+message CommunityChannelAllListResp {
+  CommonResp CommonResp = 1;
+  repeated  server_api_params.GroupChannelInfo ChannelList = 2;
+}
+
+message CommunityChannelInfoReq {
+  string OperationID = 1;
+  string OpUserID = 2;  //app manager or group owner
+  string GroupID= 3;
+  string ChannelID=4;
+}
+message CommunityChannelInfoResp {
+  CommonResp CommonResp = 1;
+  server_api_params.GroupChannelInfo ChannelList = 2;
+}
+
+
+message CommunityChannelAllListReq {
+  string GroupID = 1;
+  string OpUserID = 2; //No verification permission
+  string OperationID = 3;
+  int32 Offset = 4;
+  int32 Count = 5;
+}
+
+message GetHotCommunityReq {
+  string OperationID = 2;
+  string OpUserID = 3; //No verification permission
+}
+message GetHotSpaceReq {
+  string OperationID = 1;
+  string UserId = 2; //No verification permission
+  int32 pageIndex =3;
+  int32 pageSize=4;
+}
+message GetHotSpaceResp {
+  CommonResp CommonResp = 1;
+  repeated PublicSpaceUserInfo UserInfoList = 2;
+}
+message  SearchCommunityReq {
+  string OperationID = 1;
+  string OpUserID = 2;  //app manager or group owner
+  string OwnerUserID = 3; //owner
+  string SearchName =4;
+}
+message HotGroupInfo  {
+  // 社区id
+  string GroupID=1 ;
+  // 社区名字
+  string GroupName=2;
+  // 社区公告
+  string Notification =3;
+  // 社区介绍
+  string  Introduction =4;
+  // 群图标
+  string  FaceURL=5;
+  // 群创建者
+  string  OwnerUserID=6;
+  // 群创建者头像
+  string CreatorFaceURL= 7;
+  // 群总共成员数量
+  uint32  memberCount =8;
+  // 创建时间
+  int64  CreateTime    =9;
+  string   CreatorUserID =10;
+  uint32  GroupType   =11;
+  bool IsJoinEd      =12;
+  // 用户粉丝数量
+  uint32 FollowCount = 13;
+  //检索群里面几个成员的头像：
+  repeated server_api_params.GroupMemberFullInfo memberList =14;
+}
+message HotBannerInfo {
+  string bannerImage =1;
+  int32  bannerSort =2;
+  string bannerUrl=3;
+}
+
+message SearchCommunityResp {
+  int32   ErrCode = 1;
+  string  ErrMsg = 2;
+  repeated HotGroupInfo GroupInfo = 4;
+}
+
+message GetHotSpaceBannerResp {
+  int32   ErrCode = 1;
+  string  ErrMsg = 2;
+  repeated HotBannerInfo HotBannerInfo =3;
+}
+message GetGroupsInfoReq{
+  repeated string GroupIDList = 1;
+  string OperationID = 2;
+  string OpUserID = 3; //No verification permission
+}
+message GetGroupsInfoResp{
+  int32   ErrCode = 1;
+  string  ErrMsg = 2;
+  repeated server_api_params.GroupInfo GroupInfoList = 3;
+}
+
+
+message SetGroupInfoReq{
+  server_api_params.GroupInfoForSet groupInfoForSet = 1;
+  string OpUserID = 2; //app manager or group owner
+  string OperationID = 3;
+}
+message SetGroupInfoResp{
+  CommonResp CommonResp = 1;
+}
+
+
+message GetGroupApplicationListReq {
+  string OpUserID = 1; //app manager or group owner(manager)
+  string OperationID = 2;
+  string FromUserID = 3; //owner or manager
+}
+message GetGroupApplicationListResp {
+  int32   ErrCode = 1;
+  string  ErrMsg = 2;
+  repeated server_api_params.GroupRequest GroupRequestList = 3;
+}
+
+message GetUserReqApplicationListReq{
+  string UserID = 1;
+  string OpUserID = 2;
+  string OperationID = 3;
+}
+
+message GetUserReqApplicationListResp{
+  CommonResp CommonResp = 1;
+  repeated server_api_params.GroupRequest GroupRequestList = 2;
+}
+
+
+message TransferGroupOwnerReq {
+  string GroupID = 1;
+  string OldOwnerUserID = 2;
+  string NewOwnerUserID = 3;
+  string OperationID = 4;
+  string OpUserID = 5; //app manager or group owner
+}
+message TransferGroupOwnerResp{
+  CommonResp CommonResp = 1;
+}
+
+message JoinGroupReq{
+  string GroupID = 1;
+  string ReqMessage = 2;
+  string OpUserID = 3;
+  string OperationID = 4;
+  int32 JoinSource = 5;
+  string InviterUserID = 6;
+
+}
+message JoinGroupResp{
+  CommonResp CommonResp = 1;
+}
+
+message PublicSpaceUserInfo {
+  string userID = 1;
+  string nickname = 2;
+  string faceURL = 3;
+  int32 gender = 4;
+  string ex = 5;
+  string remark = 6;
+  string userProfile=7;
+  string tokenContractChain =8;
+  int32 followCount = 9;
+  bool isFollow = 10;
+  server_api_params.GroupInfo group = 11;
+  int32 dnsDomainVerify=12;
+}
+
+message GroupApplicationResponseReq{
+  string OperationID = 1;
+  string OpUserID = 2;
+  string GroupID = 3;
+  string FromUserID = 4;  //
+  string HandledMsg = 5;
+  int32 HandleResult = 6;
+}
+message GroupApplicationResponseResp{
+  CommonResp CommonResp = 1;
+}
+
+
+
+message QuitGroupReq{
+  string GroupID = 1;
+  string OperationID = 2;
+  string OpUserID = 3;
+}
+message QuitGroupResp{
+  CommonResp CommonResp = 1;
+}
+
+
+
+message GetGroupMemberListReq {
+  string GroupID = 1;
+  string OpUserID = 2;  //No verification permission
+  string OperationID = 3;
+  int32 Filter = 4;
+  int32 NextSeq = 5;
+}
+
+message GetGroupMemberListResp {
+  int32   ErrCode = 1;
+  string  ErrMsg = 2;
+  repeated server_api_params.GroupMemberFullInfo memberList = 3;
+  int32 nextSeq = 4;
+}
+
+
+message GetGroupMembersInfoReq {
+  string GroupID = 1;
+  repeated string memberList = 2;
+  string OpUserID = 3;  //No verification permission
+  string OperationID = 4;
+}
+
+message GetGroupMembersInfoResp {
+  int32   ErrCode = 1;
+  string  ErrMsg = 2;
+  repeated server_api_params.GroupMemberFullInfo memberList = 3;
+}
+
+message KickGroupMemberReq {
+  string GroupID = 1;
+  repeated string KickedUserIDList = 2;
+  string Reason = 3;
+  string OperationID = 5;
+  string OpUserID = 6;  //app manger or group manager
+}
+
+message Id2Result {
+  string UserID = 1;
+  int32 Result = 2; //0 ok; -1 error
+}
+
+message KickGroupMemberResp {
+  int32   ErrCode = 1;
+  string  ErrMsg = 2;
+  repeated Id2Result Id2ResultList = 3;
+}
+
+
+message GetJoinedGroupListReq {
+  string FromUserID = 1;
+  string operationID = 2;
+  string OpUserID = 3; //app manager or FromUserID
+}
+message GetJoinedGroupListResp{
+  int32   ErrCode = 1;
+  string  ErrMsg = 2;
+  repeated  server_api_params.GroupInfo GroupList = 3;
+}
+
+
+message InviteUserToGroupReq {
+  string OperationID = 2;
+  string GroupID = 3;
+  string Reason = 4;
+  repeated string InvitedUserIDList = 5;
+  string OpUserID = 6; //group member or app manager
+}
+message InviteUserToGroupResp {
+  int32   ErrCode = 1;
+  string  ErrMsg = 2;
+  repeated  Id2Result Id2ResultList = 3; // 0 ok, -1 error
+}
+
+
+message GetGroupAllMemberReq {
+  string GroupID = 1;
+  string OpUserID = 2; //No verification permission
+  string OperationID = 3;
+  int32 Offset = 4;
+  int32 Count = 5;
+}
+message GetGroupAllMemberResp {
+  int32   ErrCode = 1;
+  string  ErrMsg = 2;
+  repeated server_api_params.GroupMemberFullInfo memberList = 3;
+}
+
+message CMSGroup {
+  server_api_params.GroupInfo GroupInfo = 1;
+  string GroupOwnerUserName = 2;
+  string GroupOwnerUserID = 3;
+}
+
+
+message GetGroupsReq {
+  server_api_params.RequestPagination Pagination = 1;
+  string GroupName = 2;
+  string GroupID = 3;
+  string OperationID = 4;
+}
+
+message GetGroupsResp {
+  repeated CMSGroup CMSGroups = 1;
+  server_api_params.ResponsePagination Pagination = 2;
+  int32 GroupNum = 3;
+  CommonResp commonResp = 4;
+}
+
+message GetGroupMemberReq {
+  string GroupID = 1;
+  string OperationID = 2;
+}
+
+message GetGroupMembersCMSReq {
+  string GroupID = 1;
+  string UserName = 2;
+  server_api_params.RequestPagination Pagination = 3;
+  string OperationID = 4;
+}
+
+message GetGroupMembersCMSResp {
+  repeated server_api_params.GroupMemberFullInfo members = 1;
+  server_api_params.ResponsePagination Pagination = 2;
+  int32 MemberNums = 3;
+  CommonResp commonResp = 4;
+}
+
+message DismissGroupReq{
+  string opUserID = 1; //group  or app manager
+  string operationID = 2;
+  string groupID = 3;
+}
+
+message DismissGroupResp{
+  CommonResp commonResp = 1;
+}
+
+
+message MuteGroupMemberReq{
+  string opUserID = 1; //group  or app manager
+  string operationID = 2;
+  string groupID = 3;
+  string userID = 4;
+  uint32 mutedSeconds = 5;
+}
+
+message MuteGroupMemberResp{
+  CommonResp commonResp = 1;
+}
+
+
+
+message CancelMuteGroupMemberReq{
+  string opUserID = 1; //group  or app manager
+  string operationID = 2;
+  string groupID = 3;
+  string userID = 4;
+}
+
+message CancelMuteGroupMemberResp{
+  CommonResp commonResp = 1;
+}
+
+
+message MuteGroupReq{
+  string opUserID = 1; //group  or app manager
+  string operationID = 2;
+  string groupID = 3;
+}
+
+message MuteGroupResp{
+  CommonResp commonResp = 1;
+}
+
+
+
+message CancelMuteGroupReq{
+  string opUserID = 1; //group  or app manager
+  string operationID = 2;
+  string groupID = 3;
+}
+
+message CancelMuteGroupResp{
+  CommonResp commonResp = 1;
+}
+message SetGroupMemberNicknameReq{
+  string groupID = 1;
+  string nickname = 2;
+  string opUserID = 3;
+  string operationID = 4;
+  string userID = 5;
+}
+message SetGroupMemberNicknameResp{
+  CommonResp CommonResp = 1;
+}
+
+message GetJoinedSuperGroupListReq {
+  string operationID = 1;
+  string userID = 2;
+  string opUserID = 3;
+}
+
+message GetJoinedSuperGroupListResp {
+  CommonResp commonResp = 1;
+  repeated server_api_params.GroupInfo GroupList = 3;
+}
+
+message GetSuperGroupsInfoReq {
+  repeated string GroupIDList = 1;
+  string OperationID = 2;
+  string OpUserID = 3; //No verification permission
+}
+
+message GetSuperGroupsInfoResp {
+  CommonResp commonResp = 1;
+  repeated server_api_params.GroupInfo GroupInfoList = 3;
+}
+
+message SetGroupMemberInfoReq{
+  string groupID = 1;
+  string userID = 2;
+  string opUserID = 3;
+  string operationID = 4;
+  google.protobuf.StringValue nickname = 5;
+  google.protobuf.StringValue faceURL = 6;
+  google.protobuf.Int32Value roleLevel = 7;
+  google.protobuf.StringValue ex = 8;
+}
+
+message SetGroupMemberInfoResp{
+  CommonResp CommonResp = 1;
+}
+
+message GetGroupAbstractInfoReq{
+  string groupID = 1;
+  string opUserID = 2;
+  string operationID = 3;
+}
+
+message GetGroupHaveNftMemberCountReq {
+  string opUserID=1;
+  string operationID=2;
+  string groupID=3;
+}
+message GetGroupHaveNftMemberCountResp {
+  CommonResp CommonResp =1;
+  int32 Count=2;
+}
+message GetGroupAbstractInfoResp{
+  CommonResp CommonResp = 1;
+  int32 groupMemberNumber = 2;
+  uint64 groupMemberListHash = 3;
+}
+message GetSupperGroupListReq {
+  string operationID = 3;
+}
+message GetSupperGroupListRsp {
+  CommonResp commonResp = 1;
+  repeated string  groupid = 2;
+}
+
+message CreateSysUserGroupReq {
+  repeated string UserId = 1;
+}
+message CreateSysUserGroupRes {
+  CommonResp commonResp = 1;
+}
+message  GetHistoryMessageListParamsReq {
+  string operationID = 1;
+  string UserID=2;
+  string GroupID=3;
+  string StartClientMsgID=4;
+  int32 Count=5;
+  string ChannelID=6;
+  bool  isReverse =7;
+}
+message GetHistoryMessageListParamsResp {
+  CommonResp commonResp = 1;
+  repeated  server_api_params.MsgData message=2;
+}
+
+message CreateCommunityRoleReq  {
+  string OperationID = 1;
+  string roleTitle=2;
+  string roleIPfs =3;
+  string opUserID =4;
+  string groupID = 5;
+}
+message CreateCommunityRoleResp  {
+  CommonResp commonResp = 1;
+  string reBackOrderID =2 ;
+}
+
+message GetCommunityRoleReq {
+  string OperationID = 1;
+  string opUserID = 2;
+  string groupID=3;
+}
+message CommunityRoleInfo  {
+   string roleID=1;
+   string groupID=2;
+   string contract=3;
+   string tokenID=4;
+   string tokenAmount=5; //总数量
+   string tokenSub=6;
+   string tokenBurn=7;
+   string roleTitle=8;
+   string roleIPfs=9;
+   string chainID= 10;
+}
+message GetCommunityRoleResp {
+  CommonResp commonResp = 1;
+  repeated CommunityRoleInfo CommunityRoleInfo=2;
+
+}
+message GetCommunityRoleReqDetail {
+  string OperationID = 1;
+  string opUserID = 2;
+  string groupID=3;
+  string contract =4;
+  string tokenID=5;
+}
+message CommunityRoleInfoDetail {
+  server_api_params.UserInfo UserInfo = 1;
+  string amount =2;
+}
+message GetCommunityRoleRespDetail {
+  CommonResp commonResp = 1;
+  repeated CommunityRoleInfoDetail CommunityRoleInfoDetail=2;
+
+}
+
+
+
+message OperatorCommunityUserRoleReq {
+  string OperationID = 1;
+  string operator =2; //add  del
+  repeated string userID =3;
+  string groupID=4;
+  string RoleID =5;
+  string OpUserID =6;
+}
+message OperatorCommunityChannelRoleReq {
+  string OperationID = 1;
+  string operator = 2; //add  del
+  string channelID = 3;
+  string groupID = 4;
+  string OpUserID =5;
+}
+message GetPublishAnnouncementReq {
+  string OperationID=1;
+  string GroupID=2; //全局获取 group 为空
+  string creatorUserID=3;
+  int32 isGlobal =4;
+  int32 pageIndex =5;
+  int32 pageSize=6;
+  int64 articleID =7;
+  string OpUserID=8;
+}
+message GetPublishAnnouncementWithIdoReq {
+  string OperationID=1;
+  string creatorUserID=3;
+  int32 isGlobal =4;
+  int32 pageIndex =5;
+  int32 pageSize=6;
+  int64 ID =7;
+  string OpUserID=8;
+  int32 ArticleType=9;
+  int64 ArticleID = 10;
+}
+// 新增序列
+message PutSpaceArticleID {
+  string OperationID=1;
+  string ArticleType =2 ;
+  string ArticleID=3;
+  string OpUserID= 4;
+  string CreatorUserID=5;
+  //目前没用“““
+  google.protobuf.Timestamp EndTime=6;
+  int32 isGlobal=7;
+}
+//置顶某条消息
+message PinSpaceArticleID {
+  string ID=1;
+  string OperationID=2;
+  string ArticleType =3 ;
+  string ArticleID=4;
+  string GroupID= 5;
+  string UserID=6;
+  int32  isPin=7;
+  //目前没用
+  //google.protobuf.Timestamp EndTime=4;
+}
+//删除某条消息
+message DelSpaceArticleID {
+  string ID=1;
+  string OperationID=2;
+  string ArticleType=3;
+  string ArticleID=4;
+  string GroupID= 5;
+  string UserID=6;
+}
+message SpaceArticleIDResp {
+  CommonResp commonResp = 1;
+  int64 newSpaceArticleID = 2;
+}
+
+
+message GetPersonalPublishAnnouncementWithIdoResp {
+  CommonResp commonResp = 1;
+  repeated PersonalGenerateArticle publishAnnounce=2;
+  int64  TotalCount =3;
+  int64 CurrentPage=4;
+}
+message GenerateArticle {
+  int64  articleID = 1;
+  string createdAt = 2;
+  string updatedAt = 3;
+  string deletedAt = 4;
+  string opUserID = 5;
+  int32  groupArticleId = 6;
+  string creatorUserId = 7;
+  string announcementContent = 8;
+  string announcementUrl = 9;
+  int32  likeCount = 10;
+  int32  rewordCount = 11;
+  int32  isGlobal = 12;
+  string orderId = 13;
+  int32 status = 14;
+  string announcementTitle = 15;
+  string announcementSummary = 16;
+  int64 ID = 17;
+  string articleType = 18;
+  int32 isPin=19;
+}
+message PersonalGenerateArticle {
+  //文章的信息
+  GenerateArticle  generateArticle = 1;
+  //转发或者创建文章的人
+  server_api_params.PublicUserInfo operatorInfo = 2;
+  //文章原作者
+  server_api_params.PublicUserInfo creatorInfo = 3;
+}
+
+message GetPublishAnnouncementResp {
+  CommonResp commonResp = 1;
+  repeated AnnouncementInfo publishAnnounce=2;
+}
+message PublishAnnouncementReq {
+  string  OperationID = 1;
+  string  OpUserID=2; //文章作者
+  int32   isGlobal=3;
+  string  creatorUserID=4; //文章的作者
+  string  announcementTitle =5;
+  string  announcementSummary=6;
+  server_api_params.AnnouncementMsg AnnouncementElem=7;
+  google.protobuf.UInt64Value articleID =8;
+  google.protobuf.StringValue articleType =9;
+
+  string TxnType =10;  //支付方式
+}
+message AnnouncementInfo {
+  int64 ArticleID =1;
+  int64 CreatedAt =2;
+  int64  UpdatedAt =3;
+  string CreatorUserID=4;
+  string AnnouncementTitle=5;
+  string AnnouncementSummary=6;
+  string AnnouncementContent=7;
+  string AnnouncementUrl=8;
+  int64 LikeCount=9;
+  int64 RewordCount=10;
+  string GroupID=11;
+  int64 groupArticleID  =12;
+  int32 IsGlobal=13;
+  string GroupName =14;
+  string FaceUrl=15;
+  int32  IsRead =16;
+  int32 IsLikes =17;
+}
+message PublishAnnouncementResp {
+  CommonResp commonResp = 1;
+  order.ScanTaskInfo PayInfo = 2;  //支付信息
+}
+message OperatorCommunityUserRoleResp  {
+  CommonResp commonResp = 1;
+}
+
+message OperatorCommunityChannelRoleResp  {
+  CommonResp commonResp = 1;
+}
+message UserRoleTagListRsp {
+  CommonResp commonResp = 1;
+
+  string userID  =2;
+  repeated string roleIpfs=3;
+}
+
+message ColligateSearchGroupInfo {
+  string GroupID = 1;
+  string GroupName = 2;
+  string FaceUrl = 3;
+}
+message ColligateSearchUserInfo {
+  string UserId = 1;
+  string UserName = 2;
+  string FaceUrl = 3;
+}
+message ColligateSearchBody {
+  repeated ColligateSearchGroupInfo GroupList = 1;
+  repeated ColligateSearchUserInfo UserList = 2;
+}
+
+message ColligateSearchReq {
+  string  OperationID = 1;
+  string  SearchKey = 2;
+  string OpUserID = 3;
+}
+message ColligateSearchResp {
+  CommonResp commonResp = 1;
+  ColligateSearchBody ColligateSearchBody = 2;
+}
+message IdoDetail  {
+  string    Id=1;
+  string    WriteTime=2;
+  string    Address    =3;
+  string    Num=4;
+  string    Person=5;
+  string    Owner=6;
+  string    ChainID=7;
+  string    BaseInfo=8;
+  string    GroupId=9;
+  IDOProjectInfoSend idoProjectInfoSend =10;
+}
+message IDOProjectInfoSend {
+  string   TokenA=1;
+  string   TokenB=2;
+  string   ProjectText=3;
+  string   ProjectType=4;
+  string   GroupID=5;
+  string   StartTime=6;
+  string   EndTime=7;
+  string   InTokenCapacity=8;
+  string   InTokenAmount=9;
+  string   OutTokenCapacity=10;
+  string   MaxExchange=11;
+  string   Exchange=12;
+  string   DecimalA=13;
+  string   DecimalB=14;
+  string   LockNum=15;
+  repeated  int64  TimeList=16;
+  string   TokenNameA=17;
+  string   SymbolA=18;
+  string   DecimalsA=19;
+  string   TotalSupplyA=20;
+  string   TokenNameB=21;
+  string   SymbolB=22;
+  string   DecimalsB=23;
+  string   TotalSupplyB=24;
+}
+
+message CreatePushSpaceArticelOrderReq {
+  string OperationID = 1;
+  string SpaceArticleId = 2;
+  string UserId = 3;
+  string TxnType = 4; //货币类型名称，
+}
+message CreatePushSpaceArticelOrderResp {
+  CommonResp CommonResp = 1;
+  order.ScanTaskInfo PayInfo = 2;
+}
+
+message GlobalPushSpaceArticleReq {
+  string OperationID = 1;
+  string SpaceArticleId = 2;
+  string UserId = 3;
+}
+message GlobalPushSpaceArticleResp {
+  CommonResp CommonResp = 1;
+}
+
+
+service group{
+  //创建社区
+  rpc createCommunity(CreateCommunityReq) returns(CreateCommunityResp);
+  //创建频道
+  rpc UpdateCommunityChannel(CommunityChannelReq) returns(CommunityChannelResp);
+  // 获取热门的信息频道Banner
+  rpc getHotCommunityBanner(GetHotCommunityReq)returns (GetHotSpaceBannerResp);
+  // 查询社区
+  rpc searchCommunity(SearchCommunityReq)returns (SearchCommunityResp);
+  //获取群组下所有的社区
+  rpc getCommunityAllChannel(CommunityChannelAllListReq) returns(CommunityChannelAllListResp);
+  //查询指定channel内容
+  rpc getCommunityChannelByGroupIDAndChannelID(CommunityChannelInfoReq) returns(CommunityChannelInfoResp);
+
+  rpc createGroup(CreateGroupReq) returns(CreateGroupResp);
+  rpc joinGroup(JoinGroupReq) returns(JoinGroupResp);
+  rpc quitGroup(QuitGroupReq) returns(QuitGroupResp);
+  rpc getGroupsInfo(GetGroupsInfoReq) returns(GetGroupsInfoResp);
+  rpc setGroupInfo(SetGroupInfoReq) returns(SetGroupInfoResp);
+  rpc getGroupApplicationList(GetGroupApplicationListReq) returns(GetGroupApplicationListResp);
+  rpc getUserReqApplicationList(GetUserReqApplicationListReq) returns(GetUserReqApplicationListResp);
+  rpc transferGroupOwner(TransferGroupOwnerReq) returns(TransferGroupOwnerResp);
+  rpc groupApplicationResponse(GroupApplicationResponseReq) returns(GroupApplicationResponseResp);
+  rpc getGroupMemberList(GetGroupMemberListReq) returns(GetGroupMemberListResp);
+  rpc getGroupMembersInfo(GetGroupMembersInfoReq) returns(GetGroupMembersInfoResp);
+  rpc kickGroupMember(KickGroupMemberReq) returns (KickGroupMemberResp);
+  rpc getJoinedGroupList(GetJoinedGroupListReq) returns (GetJoinedGroupListResp);
+  rpc inviteUserToGroup(InviteUserToGroupReq) returns (InviteUserToGroupResp);
+  rpc getGroupAllMember(GetGroupAllMemberReq) returns(GetGroupAllMemberResp);
+  rpc GetGroups(GetGroupsReq) returns(GetGroupsResp);
+  rpc GetGroupMembersCMS(GetGroupMembersCMSReq) returns(GetGroupMembersCMSResp);
+  rpc DismissGroup(DismissGroupReq) returns(DismissGroupResp);
+  rpc MuteGroupMember(MuteGroupMemberReq) returns(MuteGroupMemberResp);
+  rpc CancelMuteGroupMember(CancelMuteGroupMemberReq) returns(CancelMuteGroupMemberResp);
+  rpc MuteGroup(MuteGroupReq) returns(MuteGroupResp);
+  rpc CancelMuteGroup(CancelMuteGroupReq) returns(CancelMuteGroupResp);
+  rpc SetGroupMemberNickname(SetGroupMemberNicknameReq) returns (SetGroupMemberNicknameResp);
+  rpc GetJoinedSuperGroupList(GetJoinedSuperGroupListReq) returns (GetJoinedSuperGroupListResp);
+  rpc GetSuperGroupsInfo(GetSuperGroupsInfoReq) returns (GetSuperGroupsInfoResp);
+  rpc SetGroupMemberInfo(SetGroupMemberInfoReq) returns (SetGroupMemberInfoResp);
+  rpc GetGroupAbstractInfo(GetGroupAbstractInfoReq) returns (GetGroupAbstractInfoResp);
+  rpc CreateSysUserGroup (CreateSysUserGroupReq) returns (CreateSysUserGroupRes);
+  //查询指定人加入的群组
+  rpc GetUserJoinedGroupList(GetJoinedGroupListReq) returns (GetJoinedGroupListResp);
+  rpc GetGroupHistoryMessageList(GetHistoryMessageListParamsReq)returns(GetHistoryMessageListParamsResp);
+  //获取群内带nft的总人数
+  rpc GetGroupMemberHaveNftCount(GetGroupHaveNftMemberCountReq)returns(GetGroupHaveNftMemberCountResp);
+  //查询是否可以领取
+  rpc IsCanGetGroupMemberHaveNftCountReword(GetGroupHaveNftMemberCountReq)returns(GetGroupHaveNftMemberCountResp);
+  // 社区创建角色
+  rpc CreateCommunityRole(CreateCommunityRoleReq)returns(CreateCommunityRoleResp);
+  // 查询社区已经创建的角色
+  rpc GetCommunityRole(GetCommunityRoleReq)returns(GetCommunityRoleResp);
+  rpc GetCommunityRoleDetail(GetCommunityRoleReqDetail)returns(GetCommunityRoleRespDetail);
+
+  //获取某人拥有哪些nft的标签信息
+  rpc GetUserRoleTagInfo(OperatorCommunityChannelRoleReq)returns(UserRoleTagListRsp);
+  //创建推送公告到群里面
+  rpc PublishAnnounceMoment(PublishAnnouncementReq)returns(PublishAnnouncementResp);
+  //获取公告列表
+  rpc GetPublishAnnounceMomentList(GetPublishAnnouncementReq)returns(GetPublishAnnouncementResp);
+  //获取SpaceList 一下4个函数的目的是为了 展示空间页面的列表
+  rpc GetPublishAnnounceMomentListWithIdo(GetPublishAnnouncementWithIdoReq)returns(GetPersonalPublishAnnouncementWithIdoResp);
+  //获取SpaceList 个人Push界面的邮件 一下4个函数的目的是为了 展示空间页面的列表
+  rpc GetPersonalPublishAnnounceMomentListWithIdo(GetPublishAnnouncementWithIdoReq)returns(GetPersonalPublishAnnouncementWithIdoResp);
+  // 获取热门的信息频道Banner
+  rpc GetHotCommunityBannerAnnouncementList(GetHotCommunityReq)returns (GetPersonalPublishAnnouncementWithIdoResp);
+
+  rpc InputSpaceArticleList(PutSpaceArticleID)returns(SpaceArticleIDResp);
+  rpc PinSpaceArticleList(PinSpaceArticleID)returns(SpaceArticleIDResp);
+  rpc DelSpaceArticleList(DelSpaceArticleID)returns(SpaceArticleIDResp);
+
+
+  // 综合查询
+  rpc ColligateSearch(ColligateSearchReq)returns(ColligateSearchResp);
+  
+  rpc GetHotSpace(GetHotSpaceReq)returns(GetHotSpaceResp);
+  rpc GetMyFollowingSpace(GetHotSpaceReq)returns(GetHotSpaceResp);
+
+  rpc CreatePushSpaceArticelOrder(CreatePushSpaceArticelOrderReq)returns(CreatePushSpaceArticelOrderResp);
+  rpc GlobalPushSpaceArticle(GlobalPushSpaceArticleReq)returns(GlobalPushSpaceArticleResp);
+
+}
+

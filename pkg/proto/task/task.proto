@@ -1,0 +1,354 @@
+syntax = "proto3";
+option go_package = "Open_IM/pkg/proto/task;pbTask";
+package task;
+
+message CommonResp{
+    int32   errCode = 1;
+    string  errMsg = 2;
+  }
+  
+
+message GetUserTaskListReq {
+  string OperationID = 1;
+  string UserId =2;
+  string Classify =3;
+}
+message GetUserTaskListResp {
+    CommonResp CommonResp = 1;
+    repeated UserTask Data =2;
+}
+
+message UserTask {
+    string  Id = 1;
+    string UserId = 2;
+    int32 TaskId = 3;
+    int32 Status = 4; // 0:未完成 1:已完成 2:已领取
+    int32 Progress = 5;
+    int64 StartTime = 6;
+    int64 EndTime = 7;
+    Task Task = 8;
+}
+
+message Task {
+    int32  Id = 1;
+    string  Name = 2;
+    string Type = 3;
+    string Classify = 4;
+    string Desc = 5;
+    int32 Reward = 6;
+    int32 CompletionCount = 7;
+    int64 CreateTime = 8;
+    int64 UpdateTime = 9;
+    string ClaimConditions = 10;
+    string Head = 11;
+    string EventType = 12;
+    int32 Status = 13;
+    int64 StartTime = 14;
+    int64 EndTime = 15;
+}
+
+message ClaimTaskRewardsReq {
+    string OperationID = 1;
+    string UserId =2;
+    int32 TaskId =3;
+}
+message ClaimTaskRewardsResp {
+    CommonResp CommonResp = 1;
+}
+
+message CreateTaskReq {
+    string OperationID = 1;
+    repeated Task TaskList = 2;
+    // int32 Id = 2;
+    // string  Name = 3;
+    // string Head = 4;
+    // string Type = 5;
+    // string Classify = 6;
+    // string Desc = 7;
+    // int32 Reward = 8;
+    // int32 CompletionCount = 9;
+    // string ClaimConditions = 10;
+    // int64 StartTime = 11;
+    // int64 EndTime = 12;
+    // int32 Status = 13;
+    // string eventType = 14;
+}
+
+message CreateTaskResp {
+    CommonResp CommonResp = 1;
+}
+
+message GetTaskListReq {
+    string OperationID = 1;
+    string Classify = 2;
+}
+message GetTaskListResp {
+    CommonResp CommonResp = 1;
+    repeated Task Data = 2;
+}
+
+
+message GetUserClaimTaskListReq {
+    string OperationID = 1;
+    string UserId =2;
+    int32 Status = 3;
+}
+message GetUserClaimTaskListResp {
+    CommonResp CommonResp = 1;
+    repeated UserTask Data =2;
+}
+
+// message ClaimTaskReq {
+//     string OperationID = 1;
+//     string UserId =2;
+//     int32 TaskId =3;
+// }
+// message ClaimTaskResp {
+//     CommonResp CommonResp = 1;
+// }
+
+message CheckTaskIsFinishedReq {
+    string OperationID = 1;
+    string UserId =2;
+    int32 TaskId =3;
+}
+message CheckTaskIsFinishedResp {
+    CommonResp CommonResp = 1;
+    bool IsFinished =2;
+}
+
+message IncreaseProgressCreateSpaceTaskReq {
+    string OperationID = 1;
+    string UserId =2;
+    string Date =3;
+}
+message IncreaseProgressCreateSpaceTaskResp {
+    CommonResp CommonResp = 1;
+}
+
+
+message DailyCheckInReq {
+    string OperationID = 1;
+    string UserId =2;
+}
+message DailyCheckInResp {
+    CommonResp CommonResp = 1;
+}
+
+service taskService{
+    rpc CreateTask(CreateTaskReq)returns(CreateTaskResp); // inner rpc
+    rpc GetTaskList(GetTaskListReq)returns(GetTaskListResp);
+    rpc GetUserClaimTaskList(GetUserClaimTaskListReq)returns(GetUserClaimTaskListResp);
+    rpc GetUserTaskList(GetUserTaskListReq)returns(GetUserTaskListResp);
+    rpc ClaimTaskRewards(ClaimTaskRewardsReq)returns(ClaimTaskRewardsResp);
+    rpc DailyCheckIn(DailyCheckInReq)returns(DailyCheckInResp);
+
+    // 任务通知
+    
+    // 是否完成携带NFT与新地址聊天任务
+    rpc IsFinishDailyChatNFTHeadWithNewUserTask(IsFinishDailyChatNFTHeadWithNewUserTaskReq) returns (IsFinishDailyChatNFTHeadWithNewUserTaskResp);
+    // 完成携带NFT与新地址聊天任务
+    rpc FinishDailyChatNFTHeadWithNewUserTask(FinishDailyChatNFTHeadWithNewUserTaskReq) returns (FinishDailyChatNFTHeadWithNewUserTaskResp);
+    // 是否完成携带官方NFT与新地址聊天任务
+    rpc IsFinishOfficialNFTHeadDailyChatWithNewUserTask(IsFinishOfficialNFTHeadDailyChatWithNewUserTaskReq) returns (IsFinishOfficialNFTHeadDailyChatWithNewUserTaskResp);
+    // 完成携带官方NFT与新地址聊天任务
+    rpc FinishOfficialNFTHeadDailyChatWithNewUserTask(FinishOfficialNFTHeadDailyChatWithNewUserTaskReq) returns (FinishOfficialNFTHeadDailyChatWithNewUserTaskResp);
+    // 完成上传NFT头像任务
+    rpc FinishUploadNftHeadTask(FinishUploadNftHeadTaskReq) returns (FinishUploadNftHeadTaskResp);
+    // 是否完成上传NFT头像任务
+    rpc IsFinishUploadNftHeadTask(IsFinishUploadNftHeadTaskReq) returns (IsFinishUploadNftHeadTaskResp);
+    // 完成官方NFT头像任务
+    rpc FinishOfficialNFTHeadTask(FinishOfficialNFTHeadTaskReq) returns (FinishOfficialNFTHeadTaskResp);
+    // 是否完成官方NFT头像任务
+    rpc IsFinishOfficialNFTHeadTask(IsFinishOfficialNFTHeadTaskReq) returns (IsFinishOfficialNFTHeadTaskResp);
+    // 完成创建空间任务
+    rpc FinishCreateSpaceTask(FinishCreateSpaceTaskReq) returns (FinishCreateSpaceTaskResp);
+    // 完成订阅官方空间
+    rpc FinishJoinOfficialSpaceTask(FinishJoinOfficialSpaceTaskReq) returns (FinishJoinOfficialSpaceTaskResp);
+    // 完成关注官方推特
+    rpc FinishFollowOfficialTwitterTask(FinishFollowOfficialTwitterTaskReq) returns (FinishFollowOfficialTwitterTaskResp);
+    // 完成绑定推特任务
+    rpc FinishBindTwitterTask(FinishBindTwitterTaskReq) returns (FinishBindTwitterTaskResp);
+    // 完成邀请绑定推特任务
+    rpc FinishInviteBindTwitterTask(FinishInviteBindTwitterTaskReq) returns (FinishInviteBindTwitterTaskResp);
+    // 完成邀请绑定头像
+    rpc FinishInviteUploadNftHeadTask(FinishInviteUploadNftHeadTaskReq) returns (FinishInviteUploadNftHeadTaskResp);
+    // 完成邀请关注官方推特
+    rpc FinishInviteFollowOfficialTwitterTask(FinishInviteFollowOfficialTwitterTaskReq) returns (FinishInviteFollowOfficialTwitterTaskResp);
+    // 取消官方NFT头像任务
+    rpc CloseOfficialNFTHeadTask(CloseOfficialNFTHeadTaskReq) returns (CloseOfficialNFTHeadTaskResp);
+    // 取消创建空间任务
+    rpc CancelCreateSpaceTask(CancelCreateSpaceTaskReq) returns (CancelCreateSpaceTaskResp);
+    // 取消加入官方空间任务
+    rpc CancelClaimJoinOfficialSpaceTask(CancelClaimJoinOfficialSpaceTaskReq) returns (CancelClaimJoinOfficialSpaceTaskResp);
+    // 取消加入官方空间任务
+    rpc CloseUploadNftHeadTask(CloseUploadNftHeadTaskReq) returns (CloseUploadNftHeadTaskResp);
+}
+
+message CancelClaimJoinOfficialSpaceTaskReq {
+    string OperationID = 1;
+    string UserId =2;
+}
+
+message CancelClaimJoinOfficialSpaceTaskResp {
+    CommonResp CommonResp = 1;
+}
+
+message CloseUploadNftHeadTaskReq {
+    string OperationID = 1;
+    string UserId =2;
+}
+
+message CloseUploadNftHeadTaskResp {
+    CommonResp CommonResp = 1;
+}
+
+message CancelCreateSpaceTaskReq {
+    string OperationID = 1;
+    string UserId =2;
+}
+
+message CancelCreateSpaceTaskResp {
+    CommonResp CommonResp = 1;
+}
+
+message CloseOfficialNFTHeadTaskReq {
+    string OperationID = 1;
+    string UserId =2;
+}
+
+message CloseOfficialNFTHeadTaskResp {
+    CommonResp CommonResp = 1;
+}
+
+message FinishInviteFollowOfficialTwitterTaskReq {
+    string OperationID = 1;
+    string UserId =2;
+    string formUserId =3;
+}
+
+message FinishInviteFollowOfficialTwitterTaskResp {
+    CommonResp CommonResp = 1;
+}
+
+message FinishInviteUploadNftHeadTaskReq {
+    string OperationID = 1;
+    string UserId =2;
+    string formUserId =3;
+}
+
+message FinishInviteUploadNftHeadTaskResp {
+    CommonResp CommonResp = 1;
+}
+
+message FinishInviteBindTwitterTaskReq {
+    string OperationID = 1;
+    string UserId =2;
+    string formUserId =3;
+}
+
+message FinishInviteBindTwitterTaskResp {
+    CommonResp CommonResp = 1;
+}
+
+message FinishBindTwitterTaskReq {
+    string OperationID = 1;
+    string UserId =2;
+}
+
+message FinishBindTwitterTaskResp {
+    CommonResp CommonResp = 1;
+}
+
+message FinishFollowOfficialTwitterTaskReq {
+    string OperationID = 1;
+    string UserId =2;
+}
+
+message FinishFollowOfficialTwitterTaskResp {
+    CommonResp CommonResp = 1;
+}
+
+message FinishJoinOfficialSpaceTaskReq {
+    string OperationID = 1;
+    string UserId =2;
+}
+
+message FinishJoinOfficialSpaceTaskResp {
+    CommonResp CommonResp = 1;
+}
+
+message IsFinishDailyChatNFTHeadWithNewUserTaskReq {
+    string OperationID = 1;
+    string UserId =2;
+    string ChatUser =3;
+}
+
+message IsFinishDailyChatNFTHeadWithNewUserTaskResp {
+    CommonResp CommonResp = 1;
+    bool IsFinish = 2;
+}
+message FinishDailyChatNFTHeadWithNewUserTaskReq {
+    string OperationID = 1;
+    string UserId =2;
+    string ChatUser =3;
+}
+
+message FinishDailyChatNFTHeadWithNewUserTaskResp {
+    CommonResp CommonResp = 1;
+}
+
+message IsFinishOfficialNFTHeadDailyChatWithNewUserTaskReq {
+    string OperationID = 1;
+    string UserId =2;
+    string ChatUser =3;
+}
+message IsFinishOfficialNFTHeadDailyChatWithNewUserTaskResp {
+    CommonResp CommonResp = 1;
+    bool IsFinish = 2;
+}
+message FinishOfficialNFTHeadDailyChatWithNewUserTaskReq {
+    string OperationID = 1;
+    string UserId =2;
+    string ChatUser =3;
+}
+message FinishOfficialNFTHeadDailyChatWithNewUserTaskResp {
+    CommonResp CommonResp = 1;
+}
+message FinishUploadNftHeadTaskReq {
+    string OperationID = 1;
+    string UserId =2;
+}
+message FinishUploadNftHeadTaskResp {
+    CommonResp CommonResp = 1;
+}
+message IsFinishUploadNftHeadTaskReq {
+    string OperationID = 1;
+    string UserId =2;
+}
+message IsFinishUploadNftHeadTaskResp {
+    CommonResp CommonResp = 1;
+    bool IsFinish = 2;
+}
+message FinishOfficialNFTHeadTaskReq {
+    string OperationID = 1;
+    string UserId =2;
+}
+message FinishOfficialNFTHeadTaskResp {
+    CommonResp CommonResp = 1;
+}
+message IsFinishOfficialNFTHeadTaskReq {
+    string OperationID = 1;
+    string UserId =2;
+}
+message IsFinishOfficialNFTHeadTaskResp {
+    CommonResp CommonResp = 1;
+    bool IsFinish = 2;
+}
+message FinishCreateSpaceTaskReq {
+    string OperationID = 1;
+    string UserId =2;
+}
+message FinishCreateSpaceTaskResp {
+    CommonResp CommonResp = 1;
+}

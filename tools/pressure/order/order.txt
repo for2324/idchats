@@ -1,0 +1,5 @@
+[vegeta]
+rate = 100
+duration = 10s
+timeout = 5s
+connections = 100
